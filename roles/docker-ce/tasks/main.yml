@@ -1,0 +1,36 @@
+- name: Install package by apt
+  apt: 
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
+    state: present
+    update_cache: yes
+
+- name: Add an Apt signing key, will not download if present
+  apt_key:
+    id: 0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: define lsb_release -cs
+  shell: lsb_release -cs
+  ignore_errors: True
+  register: lsb_release
+
+- name: set up the stable repository
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ lsb_release.stdout }} stable"
+
+- name: Install docker-ce.
+  apt: 
+    name: docker-ce
+    state: present
+    update_cache: yes
+  notify:
+    - restart docker
+
+- name: Add group for vagrant user
+  user:
+    name: vagrant
+    group: vagrant
+    groups: vagrant,docker
+    append: yes
+
+

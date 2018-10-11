@@ -1,0 +1,38 @@
+#### prometheus
+- name: Install prometheus package by apt
+  apt: 
+    name: prometheus
+    state: present
+    update_cache: yes
+
+- name: Put prometheus.yml on /etc
+  template: 
+    src: etc/prometheus/prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+  notify:
+    - restart prometheus
+
+#### grafana
+- name: Add an Apt signing key for grafana, will not download if present
+  apt_key:
+    url: https://packagecloud.io/gpg.key
+    state: present
+
+- name: set up the stable repository for grafana
+  shell: add-apt-repository "deb https://packagecloud.io/grafana/stable/debian/ stretch main"
+
+- name: Install grafana
+  apt:
+    name: grafana
+    state: present
+    update_cache: yes
+
+- name: Start grafana-server
+  systemd:
+    name: grafana-server
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+

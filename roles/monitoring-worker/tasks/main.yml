@@ -1,0 +1,5 @@
+- name: Install prometheus package by apt
+  apt: 
+    name: prometheus-node-exporter
+    state: present
+    update_cache: yes

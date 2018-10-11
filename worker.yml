@@ -1,0 +1,7 @@
+
+- hosts: worker
+  become: yes
+  roles:
+    - common
+    - docker-ce
+    - monitoring-worker
