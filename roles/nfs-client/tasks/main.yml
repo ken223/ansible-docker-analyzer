@@ -1,0 +1,19 @@
+- name: Install nfs package for client
+  apt:
+    name: nfs-common
+    state: present
+
+- name: Create mount point
+  file:
+    path: /mnt/work
+    state: directory
+    mode: 0777
+    owner: root
+    group: root 
+
+- name: Mount nfs server
+  mount: 
+    name: /mnt/work
+    src: 192.168.33.10:/
+    fstype: nfs
+    state: mounted

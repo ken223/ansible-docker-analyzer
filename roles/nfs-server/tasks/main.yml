@@ -1,0 +1,25 @@
+- name: Create nfs directory
+  file:
+    path: /data/share
+    state: directory
+    mode: 0777
+    owner: root
+    group: root
+
+- name: Put nginx setting file
+  template:
+    src: etc/exports
+    dest: /etc/exports
+  notify:
+    - Reload exports
+
+- name: Install nfs package for server
+  apt:
+    name: nfs-kernel-server
+    state: present
+
+- name: Start nfs service
+  service:
+    name: nfs-kernel-server
+    state: started
+
