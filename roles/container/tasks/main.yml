@@ -1,0 +1,22 @@
+- name: Install worker package by apt
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Install docker-py
+  pip:
+    name: "docker"
+    state: present
+    
+- name: Create container jupyter scipy-notebook
+  docker_container:
+    name: scipy-notebook
+    hostname: scipy-notebook_001
+    image: jupyter/scipy-notebook:latest
+    detach: yes
+    auto_remove: yes
+    ports:
+      - "10000:8888"
+    volumes:
+      - /mnt/work:/home/jovyan/work
+
